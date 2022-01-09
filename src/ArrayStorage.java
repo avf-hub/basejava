@@ -5,10 +5,13 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    private int size;
 
     void clear() {
         for (int i = 0; i < storage.length; i++) {
-            storage[i] = null;
+            if (storage[i] != null) {
+                storage[i] = null;
+            }
         }
     }
 
@@ -16,6 +19,7 @@ public class ArrayStorage {
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 storage[i] = r;
+                size = i + 1;
                 break;
             }
         }
@@ -31,10 +35,17 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
+        Resume[] tempStorage = Arrays.copyOf(storage, storage.length);
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] != null && uuid.equals(storage[i].toString())) {
                 storage[i] = null;
                 break;
+            }
+        }
+        for (int j = 0; j < storage.length; j++) {
+            if (tempStorage[j] != null && !tempStorage[j].equals(storage[j])) {
+                storage[j] = tempStorage[j + 1];
+                storage[j + 1] = null;
             }
         }
     }
@@ -43,22 +54,10 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int index = 0;
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {
-                index += i;
-            }
-        }
-        return Arrays.copyOfRange(storage, 0, index);
+        return Arrays.copyOf(storage, size());
     }
 
     int size() {
-        int index = 0;
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {
-                index += i;
-            }
-        }
-        return index;
+        return size;
     }
 }
