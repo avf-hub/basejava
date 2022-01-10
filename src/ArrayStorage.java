@@ -31,6 +31,7 @@ public class ArrayStorage {
             if (uuid.equals(storage[i].toString())) {
                 System.arraycopy(storage, i + 1, storage, i, size - i - 1);
                 storage[--size] = null;
+                break;
             }
         }
     }
