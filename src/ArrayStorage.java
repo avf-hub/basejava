@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -10,31 +9,25 @@ public class ArrayStorage {
 
     void clear() {
         for (int i = 0; i < size; i++) {
-                storage[i] = null;
+            storage[i] = null;
         }
     }
 
     void save(Resume r) {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) {
-                storage[i] = r;
-                size = i + 1;
-                break;
-            }
-        }
+        storage[size++] = r;
     }
 
-    String get(String uuid) {
+    Resume get(String uuid) {
         for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].toString())) {
-                return storage[i].toString();
+                return storage[i];
             }
         }
-        return uuid;
+        return null;
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size - 1; i++) {
             if (uuid.equals(storage[i].toString())) {
                 System.arraycopy(storage, i + 1, storage, i, size - i - 1);
                 storage[--size] = null;
