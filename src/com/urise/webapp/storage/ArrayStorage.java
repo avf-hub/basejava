@@ -25,16 +25,14 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        if (size >= storage.length) {
+        if (getIndex(r.getUuid()) != -1) {
+            System.out.println("ERROR: В хранилище уже есть резюме c таким " + r.getUuid());
+            return;
+        } else if (size >= storage.length) {
             System.out.println("ERROR: Хранилище переполнено!");
             return;
         }
-        int index = getIndex(r.getUuid());
-        if (index == -1) {
-            storage[size++] = r;
-            return;
-        }
-        System.out.println("ERROR: В хранилище уже есть резюме c таким " + r.getUuid());
+        storage[size++] = r;
     }
 
     public Resume get(String uuid) {
