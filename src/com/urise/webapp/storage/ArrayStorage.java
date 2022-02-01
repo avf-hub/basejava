@@ -18,10 +18,10 @@ public class ArrayStorage {
     public void update(Resume r) {
         int index = getIndex(r.getUuid());
         if (index == -1) {
-            System.out.println("ERROR: В хранилище нет такого резюме, нечего обновлять!");
-        } else {
-            storage[index] = r;
+            System.out.println("ERROR: В хранилище нет резюме c таким " + r.getUuid() + ", обновлять нечего!");
+            return;
         }
+        storage[index] = r;
     }
 
     public void save(Resume r) {
@@ -32,9 +32,9 @@ public class ArrayStorage {
         int index = getIndex(r.getUuid());
         if (index == -1) {
             storage[size++] = r;
-        } else {
-            System.out.println("ERROR: В хранилище уже есть такое резюме!");
+            return;
         }
+        System.out.println("ERROR: В хранилище уже есть резюме c таким " + r.getUuid());
     }
 
     public Resume get(String uuid) {
@@ -42,20 +42,19 @@ public class ArrayStorage {
         if (index == -1) {
             System.out.println("ERROR: В хранилище нет резюме c таким " + uuid);
             return null;
-        } else {
-            return storage[index];
         }
+        return storage[index];
     }
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index == -1) {
             System.out.println("ERROR: В хранилище нет резюме c таким " + uuid);
-        } else {
-            storage[index] = storage[size - 1];
-            storage[size - 1] = null;
-            size--;
+            return;
         }
+        storage[index] = storage[size - 1];
+        storage[size - 1] = null;
+        size--;
     }
 
     /**
