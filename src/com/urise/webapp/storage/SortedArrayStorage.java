@@ -22,6 +22,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     protected void insertResume(Resume r, int index) {
         int sortIndex = -index - 1;
+        System.arraycopy(storage, sortIndex, storage, sortIndex + 1, size - sortIndex);
         storage[sortIndex] = r;
     }
 }
