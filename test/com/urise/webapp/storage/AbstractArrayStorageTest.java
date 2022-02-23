@@ -5,7 +5,7 @@ import com.urise.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public abstract class AbstractArrayStorageTest {
     private final Storage storage;
@@ -38,12 +38,14 @@ public abstract class AbstractArrayStorageTest {
     public void update() {
         Resume newResume = new Resume(UUID_3);
         storage.update(newResume);
-        assertEquals(newResume, storage.get(UUID_3));
+        assertSame(newResume, storage.get(UUID_3));
     }
 
     @Test
     public void save() {
-        assertEquals(3, storage.size());
+        Resume RESUME_4 = new Resume("uuid4");
+        storage.save(RESUME_4);
+        assertEquals(RESUME_4, storage.get("uuid4"));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -55,10 +57,11 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void getAll() {
-        Resume[] allResume = storage.getAll();
-        assertEquals(RESUME_1, allResume[0]);
-        assertEquals(RESUME_2, allResume[1]);
-        assertEquals(RESUME_3, allResume[2]);
+        Resume[] allResume = new Resume[3];
+        allResume[0] = new Resume(UUID_1);
+        allResume[1] = new Resume(UUID_2);
+        allResume[2] = new Resume(UUID_3);
+        assertArrayEquals(allResume, storage.getAll());
     }
 
     @Test
@@ -68,9 +71,9 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void get() {
-        assertEquals(RESUME_1, storage.get(RESUME_1.getUuid()));
-        assertEquals(RESUME_2, storage.get(RESUME_2.getUuid()));
-        assertEquals(RESUME_3, storage.get(RESUME_3.getUuid()));
+        assertEquals(RESUME_1, storage.get(UUID_1));
+        assertEquals(RESUME_2, storage.get(UUID_2));
+        assertEquals(RESUME_3, storage.get(UUID_3));
     }
 
     @Test(expected = NotExistStorageException.class)
