@@ -38,7 +38,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            throw new ExistStorageException(uuid);
+            throw new NotExistStorageException(uuid);
         }
         deleteResume(index);
         storage[size - 1] = null;
@@ -59,7 +59,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            throw new ExistStorageException(uuid);
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
