@@ -43,9 +43,27 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void save() {
-        Resume RESUME_4 = new Resume("uuid4");
-        storage.save(RESUME_4);
-        assertEquals(RESUME_4, storage.get("uuid4"));
+        Resume resume_4 = new Resume("uuid4");
+        storage.save(resume_4);
+        assertEquals(resume_4, storage.get("uuid4"));
+        assertEquals(4, storage.size());
+    }
+
+    @Test(expected = ExistStorageException.class)
+    public void saveExist() {
+        storage.save(RESUME_2);
+    }
+
+    @Test(expected = StorageException.class)
+    public void saveOverflow() {
+        try {
+            for (int i = 4; i <= storage.size() + 1; i++) {
+                storage.save(new Resume("uuid_4"));
+            }
+        } catch (StorageException e) {
+            fail();
+        }
+        storage.save(new Resume("uuid_5"));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -55,12 +73,14 @@ public abstract class AbstractArrayStorageTest {
         storage.get(UUID_2);
     }
 
+    @Test(expected = NotExistStorageException.class)
+    public void deleteNotExist() {
+        storage.delete("dummy3");
+    }
+
     @Test
     public void getAll() {
-        Resume[] allResume = new Resume[3];
-        allResume[0] = new Resume(UUID_1);
-        allResume[1] = new Resume(UUID_2);
-        allResume[2] = new Resume(UUID_3);
+        Resume[] allResume = {RESUME_1, RESUME_2, RESUME_3};
         assertArrayEquals(allResume, storage.getAll());
     }
 
@@ -79,23 +99,5 @@ public abstract class AbstractArrayStorageTest {
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() {
         storage.get("dummy");
-    }
-
-    @Test(expected = ExistStorageException.class)
-    public void saveExist() {
-        storage.save(RESUME_2);
-    }
-
-    @Test(expected = NotExistStorageException.class)
-    public void deleteNotExist() {
-        storage.delete("dummy3");
-    }
-
-    @Test(expected = StorageException.class)
-    public void saveOverflow() {
-        for (int i = 4; i <= storage.size() + 1; i++) {
-            storage.save(new Resume("uuid_4"));
-        }
-        storage.save(new Resume("uuid_5"));
     }
 }
