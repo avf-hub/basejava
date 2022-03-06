@@ -2,21 +2,15 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class MapStorage extends AbstractStorage {
     private Map<String, Resume> map = new TreeMap<>();
 
     @Override
-    protected Object getSearchKey(String uuid) {
-        Iterator<Map.Entry<String, Resume>> iterator = map.entrySet().iterator();
-        while (iterator.hasNext()) {
-            String searchKey = iterator.next().getKey();
-            if (uuid.equals(searchKey)) {
-                return searchKey;
-            }
+    protected String getSearchKey(String uuid) {
+        if (map.containsKey(uuid)) {
+            return uuid;
         }
         return null;
     }
@@ -28,7 +22,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void doSave(Resume r, Object searchKey) {
-        map.put((String) searchKey, r);
+        map.put(r.getUuid(), r);
     }
 
     @Override
@@ -53,12 +47,8 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        Resume[] newResume = new Resume[map.size()];
-        Iterator<Map.Entry<String, Resume>> iterator = map.entrySet().iterator();
-        for (int i = 0; iterator.hasNext(); i++) {
-            newResume[i] = iterator.next().getValue();
-        }
-        return newResume;
+        Collection<Resume> values = map.values();
+        return values.toArray(new Resume[values.size()]);
     }
 
     @Override
