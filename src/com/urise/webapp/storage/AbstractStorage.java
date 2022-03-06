@@ -17,7 +17,7 @@ public abstract class AbstractStorage implements Storage {
         if (isExist(searchKey)) {
             throw new ExistStorageException(r.getUuid());
         }
-        doSave(r, searchKey);
+        doSave(r, r.getUuid());
     }
 
     public void update(Resume r) {
