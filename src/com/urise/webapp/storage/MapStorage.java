@@ -5,7 +5,7 @@ import com.urise.webapp.model.Resume;
 import java.util.*;
 
 public class MapStorage extends AbstractStorage {
-    private Map<String, Resume> map = new TreeMap<>();
+    private final Map<String, Resume> map = new TreeMap<>();
 
     @Override
     protected String getSearchKey(String uuid) {
@@ -27,17 +27,17 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void doUpdate(Resume r, Object searchKey) {
-        map.put((String) searchKey, r);
+        map.replace((String) searchKey, r);
     }
 
     @Override
     protected Resume doGet(Object searchKey) {
-        return map.get(searchKey);
+        return map.get((String) searchKey);
     }
 
     @Override
     protected void doDelete(Object searchKey) {
-        map.remove(searchKey);
+        map.remove((String) searchKey);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MapStorage extends AbstractStorage {
     @Override
     public Resume[] getAll() {
         Collection<Resume> values = map.values();
-        return values.toArray(new Resume[values.size()]);
+        return values.toArray(new Resume[size()]);
     }
 
     @Override
