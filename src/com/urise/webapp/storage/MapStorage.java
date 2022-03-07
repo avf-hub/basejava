@@ -5,7 +5,7 @@ import com.urise.webapp.model.Resume;
 import java.util.*;
 
 public class MapStorage extends AbstractStorage {
-    private final Map<String, Resume> map = new TreeMap<>();
+    private final Map<String, Resume> map = new HashMap<>();
 
     @Override
     protected String getSearchKey(String uuid) {
@@ -48,7 +48,9 @@ public class MapStorage extends AbstractStorage {
     @Override
     public Resume[] getAll() {
         Collection<Resume> values = map.values();
-        return values.toArray(new Resume[size()]);
+        Resume[] array = values.toArray(new Resume[size()]);
+        Arrays.sort(array);
+        return array;
     }
 
     @Override
