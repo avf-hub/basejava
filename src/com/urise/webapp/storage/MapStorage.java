@@ -48,13 +48,7 @@ public class MapStorage extends AbstractStorage {
     @Override
     public Resume[] getAll() {
         List<Resume> values = new ArrayList<>(map.values());
-        values.sort(
-                new Comparator<Resume>() {
-                    @Override
-                    public int compare(Resume o1, Resume o2) {
-                        return o1.getUuid().compareTo(o2.getUuid());
-                    }
-                });
+        values.sort(Comparator.comparing(Resume::getUuid));
         return values.toArray(new Resume[size()]);
     }
 
