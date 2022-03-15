@@ -1,5 +1,6 @@
 package com.urise.webapp;
 
+import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.SortedArrayStorage;
 import com.urise.webapp.storage.Storage;
@@ -11,9 +12,9 @@ public class MainTestArrayStorage {
     private static final Storage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) {
-        final Resume r1 = new Resume("uuid1");
-        final Resume r2 = new Resume("uuid2");
-        final Resume r3 = new Resume("uuid3");
+        final Resume r1 = new Resume("uuid1", "Name 1");
+        final Resume r2 = new Resume("uuid2", "Name 2");
+        final Resume r3 = new Resume("uuid3", "Name 3");
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
@@ -27,7 +28,11 @@ public class MainTestArrayStorage {
         ARRAY_STORAGE.update(r3);
         printAll();
 
-        System.out.println("\nGet dummy: " + ARRAY_STORAGE.get("dummy"));
+        try {
+            System.out.println("\nGet dummy: " + ARRAY_STORAGE.get("dummy"));
+        } catch (NotExistStorageException e) {
+            throw new NotExistStorageException("dummy");
+        }
 
         printAll();
         ARRAY_STORAGE.delete(r1.getUuid());
@@ -40,7 +45,7 @@ public class MainTestArrayStorage {
 
     static void printAll() {
         System.out.println("\nGet All");
-        for (Resume r : ARRAY_STORAGE.getAll()) {
+        for (Resume r : ARRAY_STORAGE.getAllSorted()) {
             System.out.println(r);
         }
     }
