@@ -33,7 +33,7 @@ public class ResumeTestData {
     }
 
     private static void printBody(Resume resume) {
-        Map<SectionType, Section> sections = resume.getSections();
+        Map<SectionType, AbstractSection> sections = resume.getSections();
         sections.put(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного " +
                 "обучения по Java Web и Enterprise технологиям"));
         sections.put(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, " +
@@ -126,8 +126,8 @@ public class ResumeTestData {
         printMap(sections);
     }
 
-    private static void printMap(Map<SectionType, Section> sections) {
-        for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+    private static void printMap(Map<SectionType, AbstractSection> sections) {
+        for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
             if (entry.getKey() == SectionType.ACHIEVEMENT || entry.getKey() == SectionType.QUALIFICATIONS) {
                 System.out.println(entry.getKey().getTitle() + "\n");
                 for (String item : ((ListSection) entry.getValue()).getItems()) {
