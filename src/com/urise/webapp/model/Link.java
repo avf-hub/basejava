@@ -16,15 +16,6 @@ public class Link {
         return name;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    @Override
-    public String toString() {
-        return "Link(" + name + ", " + url + ')';
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -33,7 +24,7 @@ public class Link {
         Link link = (Link) o;
 
         if (!name.equals(link.name)) return false;
-        return url.equals(link.url);
+        return url != null ? url.equals(link.url) : link.url == null;
     }
 
     @Override
@@ -42,4 +33,10 @@ public class Link {
         result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Link(" + name + ", " + url + ')';
+    }
+
 }
