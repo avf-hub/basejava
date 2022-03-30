@@ -22,10 +22,26 @@ public class MainFile {
             }
         }
 
-        try (FileInputStream fis = new FileInputStream(pathName)){
+        try (FileInputStream fis = new FileInputStream(pathName)) {
             System.out.println(fis.read());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        // HW08
+        File directory = new File(".");
+        printDirAndFiles(directory);
+    }
+
+    public static void printDirAndFiles(File directory) {
+        File[] files = directory.listFiles();
+        for (File element : files) {
+            if (element.isFile()) {
+                System.out.println("Файл: " + element.getName());
+            } else {
+                System.out.println("Папка: " + element.getName());
+                printDirAndFiles(element);
+            }
         }
     }
 }
