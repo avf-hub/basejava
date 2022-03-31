@@ -26,10 +26,6 @@ public class Resume implements Comparable<Resume> {
         return uuid;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
     public Map<ContactType, String> getContacts() {
         return contacts;
     }
@@ -38,12 +34,12 @@ public class Resume implements Comparable<Resume> {
         return sections;
     }
 
-    public String getContact(ContactType type) {
-        return contacts.get(type);
+    public void addContact(ContactType type, String value) {
+        contacts.put(type, value);
     }
 
-    public AbstractSection getSection(SectionType type) {
-        return sections.get(type);
+    public void addSection(SectionType type, AbstractSection section) {
+        sections.put(type, section);
     }
 
     @Override

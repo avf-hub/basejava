@@ -29,18 +29,19 @@ public class MainFile {
         }
 
         // HW08
-        File directory = new File(".");
-        printDirAndFiles(directory);
+        printDirAndFiles(dir);
     }
 
     public static void printDirAndFiles(File directory) {
         File[] files = directory.listFiles();
-        for (File element : files) {
-            if (element.isFile()) {
-                System.out.println("Файл: " + element.getName());
-            } else {
-                System.out.println("Папка: " + element.getName());
-                printDirAndFiles(element);
+        if (files != null) {
+            for (File element : files) {
+                if (element.isFile()) {
+                    System.out.println("File: " + element.getName());
+                } else {
+                    System.out.println("Directory: " + element.getName());
+                    printDirAndFiles(element);
+                }
             }
         }
     }
