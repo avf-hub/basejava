@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.serializer.SerializationStrategy;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -12,10 +13,11 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
-    private SerializationStrategy serialization;
+    private final SerializationStrategy serialization;
 
     protected PathStorage(String dir, SerializationStrategy serialization) {
         directory = Paths.get(dir);
@@ -60,7 +62,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return serialization.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("IO error", path.getFileName().toString(), e);
+            throw new StorageException("Path get error", path.getFileName().toString(), e);
         }
     }
 
@@ -76,7 +78,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected List<Resume> doCopyAll() {
         try {
-            return Files.list(directory).map(this::doGet).collect(Collectors.toList());
+            return getList().map(this::doGet).collect(Collectors.toList());
         } catch (IOException e) {
             throw new StorageException("Directory read error", null, e);
         }
@@ -85,7 +87,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     public void clear() {
         try {
-            Files.list(directory).forEach(this::doDelete);
+            getList().forEach(this::doDelete);
         } catch (IOException e) {
             throw new StorageException("Path delete error", null, e);
         }
@@ -94,9 +96,13 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     public int size() {
         try {
-            return (int) Files.list(directory).count();
+            return (int) getList().count();
         } catch (IOException e) {
             throw new StorageException("Directory read error", null, e);
         }
+    }
+
+    private Stream<Path> getList() throws IOException {
+        return Files.list(directory);
     }
 }

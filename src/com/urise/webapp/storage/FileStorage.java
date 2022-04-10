@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.serializer.SerializationStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.Objects;
 
 public class FileStorage extends AbstractStorage<File> {
     private final File directory;
-    private SerializationStrategy serialization;
+    private final SerializationStrategy serialization;
 
     protected FileStorage(File directory, SerializationStrategy serialization) {
         Objects.requireNonNull(directory, "directory must not be null");
@@ -58,7 +59,7 @@ public class FileStorage extends AbstractStorage<File> {
         try {
             return serialization.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("File get error", file.getName(), e);
         }
     }
 
