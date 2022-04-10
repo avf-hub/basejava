@@ -13,7 +13,7 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException("ERROR", e);
         }
-        File dir = new File("./src/com/urise/webapp");
+        File dir = new File("./src");
         System.out.println(dir.isDirectory());
         String[] list = dir.list();
         if (list != null) {
@@ -38,7 +38,7 @@ public class MainFile {
             for (File element : files) {
                 if (element.isDirectory()) {
                     System.out.println(indent + "Directory: " + element.getName());
-                    printDirAndFiles(element, "\t");
+                    printDirAndFiles(element, indent + "\t");
                 } else if (element.isFile()) {
                     System.out.println(indent + "File: " + element.getName());
                 }
