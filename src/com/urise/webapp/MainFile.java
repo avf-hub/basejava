@@ -29,18 +29,18 @@ public class MainFile {
         }
 
         // HW08
-        printDirAndFiles(dir);
+        printDirAndFiles(dir, "");
     }
 
-    public static void printDirAndFiles(File directory) {
+    public static void printDirAndFiles(File directory, String indent) {
         File[] files = directory.listFiles();
         if (files != null) {
             for (File element : files) {
-                if (element.isFile()) {
-                    System.out.println("File: " + element.getName());
-                } else {
-                    System.out.println("Directory: " + element.getName());
-                    printDirAndFiles(element);
+                if (element.isDirectory()) {
+                    System.out.println(indent + "Directory: " + element.getName());
+                    printDirAndFiles(element, "\t");
+                } else if (element.isFile()) {
+                    System.out.println(indent + "File: " + element.getName());
                 }
             }
         }
