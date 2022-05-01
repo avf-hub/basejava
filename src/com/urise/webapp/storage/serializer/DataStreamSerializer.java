@@ -5,6 +5,7 @@ import com.urise.webapp.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +17,15 @@ public class DataStreamSerializer implements StreamSerializer {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+//            dos.writeInt(contacts.size());
+//            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+//                dos.writeUTF(entry.getKey().name());
+//                dos.writeUTF(entry.getValue());
+//            }
+            writeCollection(dos, contacts.entrySet(), entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            });
 
             Map<SectionType, AbstractSection> sections = r.getSections();
             dos.writeInt(sections.size());
@@ -127,12 +132,21 @@ public class DataStreamSerializer implements StreamSerializer {
             List<Organization.Position> listPositions = new ArrayList<>(sizePositions);
             Link link = new Link(dis.readUTF(), dis.readUTF());
             for (int j = 0; j < sizePositions; j++) {
-                listPositions.add(new Organization.Position(readLocalDate(dis),
-                        readLocalDate(dis), dis.readUTF(), dis.readUTF()));
+                listPositions.add(new Organization.Position(readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF()));
             }
             list.add(new Organization(link, listPositions));
         }
         resume.addSection(sectionType, new OrganizationSection(list));
     }
 
+    private interface ElementWriter<T> {
+        void write(T t) throws IOException;
+    }
+
+    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ElementWriter<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T element : collection) {
+            writer.write(element);
+        }
+    }
 }
