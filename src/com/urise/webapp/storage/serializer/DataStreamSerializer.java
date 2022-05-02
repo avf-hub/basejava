@@ -23,8 +23,7 @@ public class DataStreamSerializer implements StreamSerializer {
             });
 
             Map<SectionType, AbstractSection> sections = r.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
+            writeCollection(dos, sections.entrySet(), entry -> {
                 SectionType sectionType = entry.getKey();
                 dos.writeUTF(sectionType.name());
                 switch (sectionType) {
@@ -50,7 +49,7 @@ public class DataStreamSerializer implements StreamSerializer {
                         });
                         break;
                 }
-            }
+            });
         }
     }
 
@@ -59,8 +58,7 @@ public class DataStreamSerializer implements StreamSerializer {
         try (DataInputStream dis = new DataInputStream(is)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
             readElements(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
-            int size = dis.readInt();
-            for (int j = 0; j < size; j++) {
+            readElements(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
                     case OBJECTIVE:
@@ -80,7 +78,7 @@ public class DataStreamSerializer implements StreamSerializer {
                         )));
                         break;
                 }
-            }
+            });
             return resume;
         }
     }
