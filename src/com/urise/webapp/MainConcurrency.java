@@ -51,9 +51,8 @@ public class MainConcurrency {
         System.out.println(counter);
 
         // HW 11
-        final Object lock1 = new Object();
-        final Object lock2 = new Object();
-
+        final String lock1 = "lock1";
+        final String lock2 = "lock2";
         deadLock(lock1, lock2);
         deadLock(lock2, lock1);
     }
@@ -70,17 +69,17 @@ public class MainConcurrency {
 
     private static void deadLock(Object obj1, Object obj2) {
         new Thread(() -> {
+            System.out.println("Waiting " + obj1);
             synchronized (obj1) {
-                System.out.println("Lock first object.");
-                synchronized (obj2) {
-                    System.out.println("Wait for lock second object.");
+                System.out.println("Holding " + obj1);
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            }
-
-            synchronized (obj2) {
-                System.out.println("Lock second object.");
-                synchronized (obj1) {
-                    System.out.println("Wait for lock first object.");
+                System.out.println("Waiting " + obj2);
+                synchronized (obj2) {
+                    System.out.println("Holding " + obj2);
                 }
             }
         }).start();
