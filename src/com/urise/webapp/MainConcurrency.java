@@ -49,6 +49,13 @@ public class MainConcurrency {
 
 //        Thread.sleep(500);
         System.out.println(counter);
+
+        // HW 11
+        final Object lock1 = new Object();
+        final Object lock2 = new Object();
+
+        deadLock(lock1, lock2);
+        deadLock(lock2, lock1);
     }
 
     private synchronized void inc() {
@@ -59,5 +66,23 @@ public class MainConcurrency {
 //                readFile
 //                ...
 //        }
+    }
+
+    private static void deadLock(Object obj1, Object obj2) {
+        new Thread(() -> {
+            synchronized (obj1) {
+                System.out.println("Lock first object.");
+                synchronized (obj2) {
+                    System.out.println("Wait for lock second object.");
+                }
+            }
+
+            synchronized (obj2) {
+                System.out.println("Lock second object.");
+                synchronized (obj1) {
+                    System.out.println("Wait for lock first object.");
+                }
+            }
+        }).start();
     }
 }
