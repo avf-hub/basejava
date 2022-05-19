@@ -100,8 +100,8 @@ public class DataStreamSerializer implements StreamSerializer {
         T read() throws IOException;
     }
 
-    private interface Element {
-        void readElement() throws IOException;
+    private interface ElementProcessor {
+        void process() throws IOException;
     }
 
     private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ElementWriter<T> writer) throws IOException {
@@ -120,10 +120,10 @@ public class DataStreamSerializer implements StreamSerializer {
         return list;
     }
 
-    private void readElements(DataInputStream dis, Element readerElements) throws IOException {
+    private void readElements(DataInputStream dis, ElementProcessor readerElements) throws IOException {
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
-            readerElements.readElement();
+            readerElements.process();
         }
     }
 }
