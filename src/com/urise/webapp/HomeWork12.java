@@ -18,7 +18,7 @@ public class HomeWork12 {
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-        int sum = integers.stream().mapToInt(item -> Integer.valueOf(item)).sum();
+        int sum = integers.stream().mapToInt(Integer::valueOf).sum();
         System.out.println(sum);
         if (sum % 2 == 0) {
             return integers.stream().filter(item -> item % 2 == 0).collect(Collectors.toList());
