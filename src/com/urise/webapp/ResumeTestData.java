@@ -3,28 +3,27 @@ package com.urise.webapp;
 import com.urise.webapp.model.*;
 
 import java.time.Month;
-import java.util.Map;
 
 public class ResumeTestData {
 
     public static void main(String[] args) {
         Resume resume = createResume("Test data", "Григорий Кислин");
         System.out.println(resume);
-        for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
+        /*for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
             System.out.println(entry.getKey().getTitle() + ": " + entry.getValue());
         }
         for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
             System.out.println(entry.getKey().getTitle() + ": " + entry.getValue());
-        }
+        }*/
     }
 
     public static Resume createResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
-        resume.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного " + "обучения по Java Web и Enterprise технологиям"));
+        /*resume.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного " + "обучения по Java Web и Enterprise технологиям"));
         resume.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, " + "креативность, инициативность. Пурист кода и архитектуры."));
         fillContacts(resume);
         fillListSections(resume);
-        fillOrganizationSection(resume);
+        fillOrganizationSection(resume);*/
 
         return resume;
     }
