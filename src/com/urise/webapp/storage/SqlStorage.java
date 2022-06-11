@@ -26,6 +26,9 @@ public class SqlStorage implements Storage {
         sqlHelper.execute("update resume set full_name = ? where uuid = ?", ps -> {
             ps.setString(1, r.getFullName());
             ps.setString(2, r.getUuid());
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException(r.getUuid());
+            }
             return null;
         });
     }
@@ -35,6 +38,7 @@ public class SqlStorage implements Storage {
         sqlHelper.execute("insert into resume (uuid, full_name) values (?, ?)", ps -> {
             ps.setString(1, r.getUuid());
             ps.setString(2, r.getFullName());
+            ps.execute();
             return null;
         });
     }
@@ -63,7 +67,7 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> list = new ArrayList<>();
-        return sqlHelper.execute("select * from resume r", ps -> {
+        return sqlHelper.execute("select * from resume order by uuid", ps -> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
@@ -76,10 +80,7 @@ public class SqlStorage implements Storage {
     public int size() {
         return sqlHelper.execute("select count(*) as size from resume r", ps -> {
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("size");
-            }
-            return 0;
+            return rs.next() ? rs.getInt("size") : 0;
         });
     }
 }
