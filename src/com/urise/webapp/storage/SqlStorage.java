@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
@@ -42,11 +43,20 @@ public class SqlStorage implements Storage {
             ps.execute();
             return null;
         });
+        for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
+            sqlHelper.<Void>execute("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)", ps -> {
+                ps.setString(1, r.getUuid());
+                ps.setString(2, e.getKey().name());
+                ps.setString(3, e.getValue());
+                ps.execute();
+                return null;
+            });
+        }
     }
 
     @Override
     public Resume get(String uuid) {
-        return sqlHelper.execute("select * from resume r join contact c on r.uuid = c.resume_uuid where r.uuid = ?", ps -> {
+        return sqlHelper.execute("select * from resume r left join contact c on r.uuid = c.resume_uuid where r.uuid = ?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
