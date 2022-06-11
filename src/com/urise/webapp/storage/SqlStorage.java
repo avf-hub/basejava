@@ -1,6 +1,7 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
 
@@ -45,13 +46,18 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        return sqlHelper.execute("select * from resume r where r.uuid = ?", ps -> {
+        return sqlHelper.execute("select * from resume r join contact c on r.uuid = c.resume_uuid where r.uuid = ?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
                 throw new NotExistStorageException(uuid);
             }
-            return new Resume(uuid, rs.getString("full_name"));
+            Resume r=new Resume(uuid, rs.getString("full_name"));
+            do {
+                r.addContact(ContactType.valueOf(rs.getString("value")),
+                        rs.getString("type"));
+            } while (rs.next());
+            return r;
         });
     }
 
@@ -67,7 +73,7 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> list = new ArrayList<>();
-        return sqlHelper.execute("select * from resume order by uuid", ps -> {
+        return sqlHelper.execute("select * from resume order by full_name,uuid", ps -> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
