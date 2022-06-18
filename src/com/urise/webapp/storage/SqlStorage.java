@@ -42,15 +42,14 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume r) {
         sqlHelper.transactionalExecute(conn -> {
-                    try (PreparedStatement ps = conn.prepareStatement("insert into resume (uuid, full_name) values (?,?)")) {
-                        ps.setString(1, r.getUuid());
-                        ps.setString(2, r.getFullName());
-                        ps.execute();
-                    }
-                    insertContact(conn, r);
-                    return null;
-                }
-        );
+            try (PreparedStatement ps = conn.prepareStatement("insert into resume (uuid, full_name) values (?,?)")) {
+                ps.setString(1, r.getUuid());
+                ps.setString(2, r.getFullName());
+                ps.execute();
+            }
+            insertContact(conn, r);
+            return null;
+        });
     }
 
     @Override
@@ -63,8 +62,7 @@ public class SqlStorage implements Storage {
             }
             Resume r = new Resume(uuid, rs.getString("full_name"));
             do {
-                r.addContact(ContactType.valueOf(rs.getString("type")),
-                        rs.getString("value"));
+                r.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
             } while (rs.next());
             return r;
         });
@@ -72,7 +70,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        sqlHelper.<Void>execute("delete from resume r where r.uuid = ?", ps -> {
+        sqlHelper.execute("delete from resume r where r.uuid = ?", ps -> {
             ps.setString(1, uuid);
             if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException(uuid);
