@@ -10,10 +10,12 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.getInstance().getStorageDir();
@@ -76,7 +78,9 @@ public abstract class AbstractStorageTest {
     public void getAllSorted() {
         List<Resume> list = storage.getAllSorted();
         assertEquals(3, list.size());
-        assertEquals(Arrays.asList(RESUME_1, RESUME_2, RESUME_3), list);
+        List<Resume> sortedResumes = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        Collections.sort(sortedResumes);
+        assertEquals(sortedResumes, list);
     }
 
     @Test(expected = ExistStorageException.class)

@@ -6,10 +6,7 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
@@ -33,7 +30,7 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(r.getUuid());
                 }
             }
-            deleteContact(conn, r);
+            deleteContacts(conn, r);
             insertContact(conn, r);
             return null;
         });
@@ -62,7 +59,7 @@ public class SqlStorage implements Storage {
             }
             Resume r = new Resume(uuid, rs.getString("full_name"));
             do {
-                r.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                addContact(rs, r);
             } while (rs.next());
             return r;
         });
@@ -81,9 +78,9 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute("select r.full_name, r.uuid, c.type, c.value from resume r left join contact c on r.uuid = c.resume_uuid order by full_name, uuid", ps -> {
+        return sqlHelper.execute("select * from resume r left join contact c on r.uuid = c.resume_uuid order by full_name, uuid", ps -> {
             ResultSet rs = ps.executeQuery();
-            Map<String, Resume> map = new HashMap<>();
+            Map<String, Resume> map = new LinkedHashMap<>();
             while (rs.next()) {
                 String uuid = rs.getString("uuid");
                 Resume resume = map.get(uuid);
@@ -91,7 +88,7 @@ public class SqlStorage implements Storage {
                     resume = new Resume(uuid, rs.getString("full_name"));
                     map.put(uuid, resume);
                 }
-                resume.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                addContact(rs, resume);
             }
 
             return new ArrayList<>(map.values());
@@ -118,13 +115,18 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void deleteContact(Connection conn, Resume r) {
-        sqlHelper.<Void>execute("delete from contact c where c.resume_uuid = ?", ps -> {
+    private void deleteContacts(Connection conn, Resume r) {
+        sqlHelper.execute("delete from contact where resume_uuid = ?", ps -> {
             ps.setString(1, r.getUuid());
-            if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(r.getUuid());
-            }
+            ps.execute();
             return null;
         });
+    }
+
+    private void addContact(ResultSet rs, Resume r) throws SQLException {
+        String value = rs.getString("value");
+        if (value != null) {
+            r.addContact(ContactType.valueOf(rs.getString("type")), value);
+        }
     }
 }
