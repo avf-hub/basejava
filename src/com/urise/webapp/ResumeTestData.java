@@ -13,9 +13,9 @@ public class ResumeTestData {
         for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
             System.out.println(entry.getKey().getTitle() + ": " + entry.getValue());
         }
-        /*for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
+        for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
             System.out.println(entry.getKey().getTitle() + ": " + entry.getValue());
-        }*/
+        }
     }
 
     public static Resume createResume(String uuid, String fullName) {
@@ -23,8 +23,8 @@ public class ResumeTestData {
         resume.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного " + "обучения по Java Web и Enterprise технологиям"));
         resume.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, " + "креативность, инициативность. Пурист кода и архитектуры."));
         fillContacts(resume);
-        /*fillListSections(resume);
-        fillOrganizationSection(resume);*/
+        fillListSections(resume);
+        //fillOrganizationSection(resume);
 
         return resume;
     }
