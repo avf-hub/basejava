@@ -13,6 +13,13 @@ import java.io.PrintWriter;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
+    private SqlStorage storage;
+
+    @Override
+    public void init() {
+        storage = Config.getInstance().getStorage();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -31,7 +38,6 @@ public class ResumeServlet extends HttpServlet {
     }
 
     private void printResumes(HttpServletResponse response) throws IOException {
-        SqlStorage storage = Config.getInstance().getStorage();
         List<Resume> resumes = storage.getAllSorted();
         PrintWriter writer = response.getWriter();
 
