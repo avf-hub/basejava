@@ -4,8 +4,26 @@ import com.urise.webapp.model.*;
 
 import java.time.Month;
 import java.util.Map;
+import java.util.UUID;
 
 public class ResumeTestData {
+
+    public static final String UUID_1 = UUID.randomUUID().toString();
+    public static final String UUID_2 = UUID.randomUUID().toString();
+    public static final String UUID_3 = UUID.randomUUID().toString();
+    public static final String UUID_4 = UUID.randomUUID().toString();
+
+    public static final Resume RESUME_1;
+    public static final Resume RESUME_2;
+    public static final Resume RESUME_3;
+    public static final Resume RESUME_4;
+
+    static {
+        RESUME_1 = ResumeTestData.createResume(UUID_1, "Name1");
+        RESUME_2 = ResumeTestData.createResume(UUID_2, "Name2");
+        RESUME_3 = ResumeTestData.createResume(UUID_3, "Name3");
+        RESUME_4 = ResumeTestData.createResume(UUID_4, "Name4");
+    }
 
     public static void main(String[] args) {
         Resume resume = createResume("Test data", "Григорий Кислин");
