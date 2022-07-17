@@ -1,5 +1,7 @@
 <%@ page import="com.urise.webapp.model.TextSection" %>
 <%@ page import="com.urise.webapp.model.ListSection" %>
+<%@ page import="com.urise.webapp.model.OrganizationSection" %>
+<%@ page import="com.urise.webapp.utils.HtmlUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -58,9 +60,35 @@
                         </td>
                     </tr>
                 </c:when>
+                <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                    <c:forEach var="org" items="<%=((OrganizationSection) section).getOrganizations()%>">
+                        <tr>
+                            <td colspan="2">
+                                <c:choose>
+                                    <c:when test="${empty org.homePage.url}">
+                                        <h3>${org.homePage.name}</h3>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <h3><a href="${org.homePage.url}">${org.homePage.name}</a></h3>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
+                        <c:forEach var="position" items="${org.positions}">
+                            <jsp:useBean id="position" type="com.urise.webapp.model.Organization.Position"/>
+                            <tr>
+                                <td width="15%" style="vertical-align: top"><%=HtmlUtil.formatDates(position)%>
+                                </td>
+                                <td><b>${position.title}</b><br>${position.description}</td>
+                            </tr>
+                        </c:forEach>
+                    </c:forEach>
+                </c:when>
             </c:choose>
         </c:forEach>
     </table>
+    <br/>
+    <button onclick="window.history.back()">ОК</button>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
