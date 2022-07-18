@@ -15,11 +15,11 @@ public class DateUtil {
 
     public static String format(LocalDate date) {
         if (date == null) return "";
-        return date.equals(NOW) ? "Сейчас" : date.format(DATE_FORMATTER);
+        return date.getMonth().equals(LocalDate.now().getMonth()) ? "Сейчас" : date.format(DATE_FORMATTER);
     }
 
     public static LocalDate parse(String date) {
-        if (HtmlUtil.isEmpty(date) || "Сейчас".equals(date)) return NOW;
+        if (HtmlUtil.isEmpty(date) || "Сейчас".equals(date)) return LocalDate.now();
         YearMonth yearMonth = YearMonth.parse(date, DATE_FORMATTER);
         return LocalDate.of(yearMonth.getYear(), yearMonth.getMonth(), 1);
     }
