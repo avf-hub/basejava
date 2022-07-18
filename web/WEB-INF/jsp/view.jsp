@@ -9,7 +9,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
     <jsp:useBean id="resume" type="com.urise.webapp.model.Resume" scope="request"/>
-    <title>${resume.fullName}</title>
+    <title>Резюме ${resume.fullName}</title>
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
@@ -19,9 +19,9 @@
         <c:forEach var="contactEntry" items="${resume.contacts}">
             <jsp:useBean id="contactEntry"
                          type="java.util.Map.Entry<com.urise.webapp.model.ContactType, java.lang.String>"/>
-            <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
+                <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
-    </p>
+    <p>
     <hr>
     <table cellpadding="2">
         <c:forEach var="sectionEntry" items="${resume.sections}">
@@ -37,8 +37,7 @@
                 <c:when test="${type=='OBJECTIVE'}">
                     <tr>
                         <td colspan="2">
-                            <h3><%=((TextSection) section).getContent()%>
-                            </h3>
+                            <h3><%=((TextSection) section).getContent()%></h3>
                         </td>
                     </tr>
                 </c:when>

@@ -146,7 +146,7 @@ public class SqlStorage implements Storage {
             for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
                 ps.setString(1, r.getUuid());
                 ps.setString(2, e.getKey().name());
-                ps.setString(3, JsonParser.write(e.getValue()));
+                ps.setString(3, e.getValue());
                 ps.addBatch();
             }
             ps.executeBatch();

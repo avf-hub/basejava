@@ -1,8 +1,8 @@
-<%@ page import="com.urise.webapp.model.ContactType" %>
-<%@ page import="com.urise.webapp.model.SectionType" %>
+<%@ page import="com.urise.webapp.utils.DateUtil" %>
 <%@ page import="com.urise.webapp.model.ListSection" %>
 <%@ page import="com.urise.webapp.model.OrganizationSection" %>
-<%@ page import="com.urise.webapp.utils.DateUtil" %>
+<%@ page import="com.urise.webapp.model.SectionType" %>
+<%@ page import="com.urise.webapp.model.ContactType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
