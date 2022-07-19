@@ -95,10 +95,6 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
 
-        if (fullName == null || fullName.trim().length() == 0) {
-            response.sendRedirect("resume");
-            return;
-        }
         final boolean isCreate = (uuid == null || uuid.length() == 0);
         Resume r;
         if (isCreate) {
