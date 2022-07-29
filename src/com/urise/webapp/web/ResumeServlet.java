@@ -12,23 +12,32 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class ResumeServlet extends HttpServlet {
     private SqlStorage storage; // = Config.getInstance().getStorage();
+
+    private enum THEME {
+        dark, light, purple
+    }
+
+    private final Set<String> themes = new HashSet<>(); // https://stackoverflow.com/a/4936895/548473
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         storage = Config.getInstance().getStorage();
+        for (THEME t : THEME.values()) {
+            themes.add(t.name());
+        }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = request.getParameter("uuid");
         String action = request.getParameter("action");
+        request.setAttribute("theme", getTheme(request));
+
         if (action == null) {
             request.setAttribute("resumes", storage.getAllSorted());
             request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
@@ -37,6 +46,7 @@ public class ResumeServlet extends HttpServlet {
         Resume r;
         switch (action) {
             case "delete":
+                Config.getInstance().checkImmutable(uuid);
                 storage.delete(uuid);
                 response.sendRedirect("resume");
                 return;
@@ -100,6 +110,7 @@ public class ResumeServlet extends HttpServlet {
         if (isCreate) {
             r = new Resume(fullName);
         } else {
+            Config.getInstance().checkImmutable(uuid);
             r = storage.get(uuid);
             r.setFullName(fullName);
         }
@@ -125,9 +136,7 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        List<String> list = new ArrayList<>(Arrays.asList(value.replace("\r", "").split("\\n")));
-                        list.removeAll(Arrays.asList("", null));
-                        r.setSection(type, new ListSection(list));
+                        r.setSection(type, new ListSection(value.split("\\n")));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
@@ -160,7 +169,12 @@ public class ResumeServlet extends HttpServlet {
         } else {
             storage.update(r);
         }
-        response.sendRedirect("resume");
+        response.sendRedirect("resume?theme=" + getTheme(request));
+    }
+
+    private String getTheme(HttpServletRequest request) {
+        String theme = request.getParameter("theme");
+        return themes.contains(theme) ? theme : THEME.light.name();
     }
 
     /*private void printResumes(HttpServletResponse response) throws IOException {
